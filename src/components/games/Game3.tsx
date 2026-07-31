@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Compass, Lantern, MoveRight } from "lucide-react";
+import { Compass, MoveRight } from "lucide-react";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
