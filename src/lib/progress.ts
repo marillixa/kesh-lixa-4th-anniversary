@@ -75,6 +75,23 @@ export function useProgress() {
     [update],
   );
 
+  const uncompleteGame = useCallback(
+    (id: number) =>
+      update((p) => ({ ...p, completedGames: p.completedGames.filter((g) => g !== id) })),
+    [update],
+  );
+
+  const toggleGame = useCallback(
+    (id: number) =>
+      update((p) => ({
+        ...p,
+        completedGames: p.completedGames.includes(id)
+          ? p.completedGames.filter((g) => g !== id)
+          : [...p.completedGames, id].sort((a, b) => a - b),
+      })),
+    [update],
+  );
+
   const setGameState = useCallback(
     (id: number, state: unknown) =>
       update((p) => ({ ...p, gameState: { ...p.gameState, [`game-${id}`]: state } })),
