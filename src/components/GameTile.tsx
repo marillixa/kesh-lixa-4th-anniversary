@@ -24,8 +24,11 @@ export function GameTile({
           <Check className="size-3 text-primary-foreground" strokeWidth={3} />
         </span>
       )}
-      <span className="flex size-11 items-center justify-center rounded-2xl bg-accent/60">
-        <Icon className="size-5 text-accent-foreground" strokeWidth={1.5} />
+      <span
+        className="flex size-11 items-center justify-center rounded-2xl"
+        style={{ backgroundColor: game.tint }}
+      >
+        <Icon className="size-5" style={{ color: game.tintFg }} strokeWidth={1.5} />
       </span>
       <span className="text-sm font-medium text-foreground">{game.title}</span>
       <span className="px-1 text-[0.68rem] leading-tight text-muted-foreground">{game.hint}</span>
