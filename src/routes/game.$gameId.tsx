@@ -49,7 +49,7 @@ function GamePage() {
     return (
       <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8">
         <BackLink />
-        <Game3 onComplete={() => {}} />
+        <Game3 />
         <button
           type="button"
           onClick={() => {

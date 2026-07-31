@@ -10,7 +10,7 @@ const MOVES = [
   { dir: "N", label: "North", steps: 1 },
 ];
 
-export function Game3({ onComplete }: { onComplete: () => void }) {
+export function Game3() {
   const [step, setStep] = useState<Step>(1);
   const [letters, setLetters] = useState(["", "", ""]);
   const [error, setError] = useState(false);
