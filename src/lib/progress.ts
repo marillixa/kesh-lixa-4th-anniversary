@@ -100,5 +100,5 @@ export function useProgress() {
 
   const reset = useCallback(() => update(() => emptyProgress), [update]);
 
-  return { progress, loaded, unlock, lock, completeGame, setGameState, reset };
+  return { progress, loaded, unlock, lock, completeGame, uncompleteGame, toggleGame, setGameState, reset };
 }

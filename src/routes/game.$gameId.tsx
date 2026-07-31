@@ -23,7 +23,7 @@ export const Route = createFileRoute("/game/$gameId")({
 function GamePage() {
   const { gameId } = Route.useParams();
   const navigate = useNavigate();
-  const { progress, loaded, completeGame } = useProgress();
+  const { progress, loaded, toggleGame } = useProgress();
 
   const id = Number(gameId);
   const game = GAMES.find((g) => g.id === id);
@@ -53,13 +53,13 @@ function GamePage() {
         <button
           type="button"
           onClick={() => {
-            completeGame(game.id);
+            toggleGame(game.id);
             navigate({ to: "/" });
           }}
           className="press mt-6 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs text-muted-foreground active:scale-95 sm:hover:text-foreground"
         >
           {completed && <Check className="size-3.5 text-primary" strokeWidth={2.5} />}
-          Mark as Complete
+          {completed ? "Mark as Incomplete" : "Mark as Complete"}
         </button>
       </main>
     );
@@ -72,8 +72,11 @@ function GamePage() {
       <BackLink />
 
       <section className="surface animate-fade-up mt-8 flex flex-1 flex-col items-center justify-center gap-5 rounded-3xl p-10 text-center">
-        <span className="flex size-16 items-center justify-center rounded-3xl bg-accent/60">
-          <Icon className="size-7 text-accent-foreground" strokeWidth={1.5} />
+        <span
+          className="flex size-16 items-center justify-center rounded-3xl"
+          style={{ backgroundColor: game.tint }}
+        >
+          <Icon className="size-7" style={{ color: game.tintFg }} strokeWidth={1.5} />
         </span>
         <h1 className="text-3xl">{game.title}</h1>
         <p className="max-w-xs text-sm text-muted-foreground">
@@ -82,13 +85,12 @@ function GamePage() {
 
         <button
           type="button"
-          onClick={() => completeGame(game.id)}
-          disabled={completed}
+          onClick={() => toggleGame(game.id)}
           className="press mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm text-primary-foreground active:scale-95 disabled:opacity-60"
         >
           {completed ? (
             <>
-              <Check className="size-4" strokeWidth={2.5} /> Completed
+              <Check className="size-4" strokeWidth={2.5} /> Completed — tap to undo
             </>
           ) : (
             "Mark as complete"
