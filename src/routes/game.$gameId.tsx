@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import { GAMES } from "@/lib/games";
 import { useProgress } from "@/lib/progress";
+import { Game3 } from "@/components/games/Game3";
 
 export const Route = createFileRoute("/game/$gameId")({
   head: () => ({
@@ -43,6 +44,28 @@ function GamePage() {
 
   const completed = progress.completedGames.includes(game.id);
   const { Icon } = game;
+
+  if (game.id === 3) {
+    return (
+      <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8">
+        <BackLink />
+        <Game3 />
+        <button
+          type="button"
+          onClick={() => {
+            completeGame(game.id);
+            navigate({ to: "/" });
+          }}
+          className="press mt-6 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs text-muted-foreground active:scale-95 sm:hover:text-foreground"
+        >
+          {completed && <Check className="size-3.5 text-primary" strokeWidth={2.5} />}
+          Mark as Complete
+        </button>
+      </main>
+    );
+  }
+
+
 
   return (
     <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-16 pt-8 sm:px-8">
