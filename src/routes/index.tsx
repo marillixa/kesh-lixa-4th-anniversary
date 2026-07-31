@@ -1,24 +1,32 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Home } from "@/components/Home";
+import { LockScreen } from "@/components/LockScreen";
+import { useProgress } from "@/lib/progress";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Our Little Adventure — An Anniversary Scavenger Hunt" },
+      {
+        name: "description",
+        content:
+          "A cozy, passcode-protected anniversary scavenger hunt with nine little mysteries to discover together.",
+      },
+      { property: "og:title", content: "Our Little Adventure — An Anniversary Scavenger Hunt" },
+      {
+        property: "og:description",
+        content: "Nine little mysteries await you. A cozy mystery game made for someone you love.",
+      },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
+  const { progress, loaded, unlock } = useProgress();
+
+  if (!loaded) return <div className="min-h-dvh" />;
+  if (!progress.unlocked) return <LockScreen onUnlocked={unlock} />;
+
+  return <Home completedGames={progress.completedGames} />;
 }
