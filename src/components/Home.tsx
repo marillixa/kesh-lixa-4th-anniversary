@@ -1,5 +1,7 @@
 import { GAMES } from "@/lib/games";
 import { GameTile } from "./GameTile";
+import { KeepsakesSection } from "./keepsakes/KeepsakesSection";
+
 
 export function Home({ completedGames }: { completedGames: number[] }) {
   const done = completedGames.length;
