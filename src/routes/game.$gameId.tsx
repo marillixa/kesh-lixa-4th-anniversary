@@ -28,6 +28,8 @@ function GamePage() {
   const { gameId } = Route.useParams();
   const navigate = useNavigate();
   const { progress, loaded, toggleGame } = useProgress();
+  const [celebrating, setCelebrating] = useState<Keepsake | null>(null);
+  const [viewing, setViewing] = useState<Keepsake | null>(null);
 
   const id = Number(gameId);
   const game = GAMES.find((g) => g.id === id);
@@ -49,6 +51,35 @@ function GamePage() {
   const completed = progress.completedGames.includes(game.id);
   const { Icon } = game;
 
+  const handleToggle = () => {
+    toggleGame(game.id);
+    if (completed) return; // was completed → just un-marked, stay put
+    const keepsake = getKeepsakeForGame(game.id);
+    if (keepsake) setCelebrating(keepsake);
+    else navigate({ to: "/" });
+  };
+
+  const overlays = (
+    <>
+      <CelebrationModal
+        keepsake={viewing ? null : celebrating}
+        onViewKeepsake={() => setViewing(celebrating)}
+        onReturnHome={() => {
+          setCelebrating(null);
+          navigate({ to: "/" });
+        }}
+      />
+      <KeepsakeModal
+        keepsake={viewing}
+        onClose={() => {
+          setViewing(null);
+          setCelebrating(null);
+          navigate({ to: "/" });
+        }}
+      />
+    </>
+  );
+
   if (game.id === 3) {
     return (
       <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8">
@@ -56,20 +87,16 @@ function GamePage() {
         <Game3 />
         <button
           type="button"
-          onClick={() => {
-            toggleGame(game.id);
-            navigate({ to: "/" });
-          }}
+          onClick={handleToggle}
           className="press mt-6 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs text-muted-foreground active:scale-95 sm:hover:text-foreground"
         >
           {completed && <Check className="size-3.5 text-primary" strokeWidth={2.5} />}
           {completed ? "Mark as Incomplete" : "Mark as Complete"}
         </button>
+        {overlays}
       </main>
     );
   }
-
-
 
   return (
     <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-16 pt-8 sm:px-8">
@@ -89,7 +116,7 @@ function GamePage() {
 
         <button
           type="button"
-          onClick={() => toggleGame(game.id)}
+          onClick={handleToggle}
           className="press mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm text-primary-foreground active:scale-95 disabled:opacity-60"
         >
           {completed ? (
@@ -101,8 +128,10 @@ function GamePage() {
           )}
         </button>
       </section>
+      {overlays}
     </main>
   );
+
 }
 
 function BackLink() {
