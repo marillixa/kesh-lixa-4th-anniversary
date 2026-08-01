@@ -1,9 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import { GAMES } from "@/lib/games";
 import { useProgress } from "@/lib/progress";
+import { getKeepsakeForGame, type Keepsake } from "@/lib/keepsakes";
+import { CelebrationModal } from "@/components/keepsakes/CelebrationModal";
+import { KeepsakeModal } from "@/components/keepsakes/KeepsakeModal";
 import { Game3 } from "@/components/games/Game3";
+
 
 export const Route = createFileRoute("/game/$gameId")({
   head: () => ({
