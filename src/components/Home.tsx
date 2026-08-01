@@ -1,6 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import { GAMES } from "@/lib/games";
 import { GameTile } from "./GameTile";
-import { KeepsakesSection } from "./keepsakes/KeepsakesSection";
+import { KEEPSAKES, TOTAL_KEEPSAKES, isKeepsakeUnlocked } from "@/lib/keepsakes";
+
 
 
 export function Home({ completedGames }: { completedGames: number[] }) {
