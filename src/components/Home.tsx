@@ -1,5 +1,7 @@
 import { GAMES } from "@/lib/games";
 import { GameTile } from "./GameTile";
+import { KeepsakesSection } from "./keepsakes/KeepsakesSection";
+
 
 export function Home({ completedGames }: { completedGames: number[] }) {
   const done = completedGames.length;
@@ -31,6 +33,9 @@ export function Home({ completedGames }: { completedGames: number[] }) {
           />
         ))}
       </section>
+
+      <KeepsakesSection completedGames={completedGames} />
+
 
       <p className="animate-fade-up mt-12 text-center text-xs text-muted-foreground [animation-delay:700ms]">
         Take your time. There's no rush with us.
