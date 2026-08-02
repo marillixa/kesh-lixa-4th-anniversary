@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as KeepsakesRouteImport } from './routes/keepsakes'
 import { Route as GameGameIdRouteImport } from './routes/game.$gameId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KeepsakesRoute = KeepsakesRouteImport.update({
+  id: '/keepsakes',
+  path: '/keepsakes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GameGameIdRoute = GameGameIdRouteImport.update({
@@ -25,27 +31,31 @@ const GameGameIdRoute = GameGameIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/keepsakes': typeof KeepsakesRoute
   '/game/$gameId': typeof GameGameIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/keepsakes': typeof KeepsakesRoute
   '/game/$gameId': typeof GameGameIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/keepsakes': typeof KeepsakesRoute
   '/game/$gameId': typeof GameGameIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/game/$gameId'
+  fullPaths: '/' | '/keepsakes' | '/game/$gameId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/game/$gameId'
-  id: '__root__' | '/' | '/game/$gameId'
+  to: '/' | '/keepsakes' | '/game/$gameId'
+  id: '__root__' | '/' | '/keepsakes' | '/game/$gameId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KeepsakesRoute: typeof KeepsakesRoute
   GameGameIdRoute: typeof GameGameIdRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/keepsakes': {
+      id: '/keepsakes'
+      path: '/keepsakes'
+      fullPath: '/keepsakes'
+      preLoaderRoute: typeof KeepsakesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/game/$gameId': {
@@ -70,8 +87,19 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KeepsakesRoute: KeepsakesRoute,
   GameGameIdRoute: GameGameIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
