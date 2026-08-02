@@ -121,7 +121,7 @@ export function Game6() {
       launchCelebrationConfetti();
     }}
   >
-    I Found It ❤️
+    I Found It
   </PrimaryButton>
 )}
         </Card>
