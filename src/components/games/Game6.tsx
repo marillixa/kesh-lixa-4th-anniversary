@@ -40,7 +40,7 @@ export function Game6() {
           </p>
 
           <PrimaryButton onClick={() => setStep(2)}>
-            Let's Try ❤️
+            ❤️ Let's Try ❤️
           </PrimaryButton>
         </Card>
       )}
