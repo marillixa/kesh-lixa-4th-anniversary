@@ -7,6 +7,8 @@ import { KEEPSAKES, TOTAL_KEEPSAKES, isKeepsakeUnlocked } from "@/lib/keepsakes"
 
 export function Home({ completedGames }: { completedGames: number[] }) {
   const done = completedGames.length;
+  const collected = KEEPSAKES.filter((k) => isKeepsakeUnlocked(k, completedGames)).length;
+
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col px-6 pb-16 pt-16 sm:px-8">
@@ -36,7 +38,20 @@ export function Home({ completedGames }: { completedGames: number[] }) {
         ))}
       </section>
 
-      <KeepsakesSection completedGames={completedGames} />
+      <Link
+        to="/keepsakes"
+        className="animate-fade-up mt-10 flex items-center justify-center gap-3 rounded-3xl border border-border/70 bg-card/70 px-6 py-5 text-center shadow-sm transition-transform duration-300 hover:-translate-y-0.5 [animation-delay:600ms]"
+      >
+        <span className="text-lg">❤️</span>
+        <span className="flex flex-col items-start">
+          <span className="font-display text-base text-foreground">Keepsakes</span>
+          <span className="text-[0.7rem] uppercase tracking-[0.2em] text-muted-foreground">
+            {collected} / {TOTAL_KEEPSAKES} Collected
+          </span>
+        </span>
+        <span className="ml-1 text-muted-foreground">→</span>
+      </Link>
+
 
 
       <p className="animate-fade-up mt-12 text-center text-xs text-muted-foreground [animation-delay:700ms]">
