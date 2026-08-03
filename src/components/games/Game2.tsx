@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState, type ReactNode } from "react";
 import { RotateCcw } from "lucide-react";
 import { launchCelebrationConfetti } from "@/lib/confetti";
 
@@ -7,15 +7,27 @@ const IMAGE = "/images/puzzle/game2.jpg";
 const SIZE = 3;
 
 function shuffleBoard() {
-  const arr = [...Array(9).keys()];
+  let board = [...Array(9).keys()];
 
-  // random legal shuffle
-  for (let i = arr.length - 2; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+  for (let i = 0; i < 200; i++) {
+    const empty = board.indexOf(8);
+
+    const neighbors: number[] = [];
+
+    const row = Math.floor(empty / SIZE);
+    const col = empty % SIZE;
+
+    if (row > 0) neighbors.push(empty - SIZE);
+    if (row < SIZE - 1) neighbors.push(empty + SIZE);
+    if (col > 0) neighbors.push(empty - 1);
+    if (col < SIZE - 1) neighbors.push(empty + 1);
+
+    const swap = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+    [board[empty], board[swap]] = [board[swap], board[empty]];
   }
 
-  return arr;
+  return board;
 }
 
 export function Game2() {
@@ -25,8 +37,13 @@ export function Game2() {
 
   const [finished, setFinished] = useState(false);
 
+  const [openedEnvelope, setOpenedEnvelope] = useState(false);
+  const [showEnvelope, setShowEnvelope] = useState(false);
+
   function reset() {
     setFinished(false);
+    setShowEnvelope(false);
+    setOpenedEnvelope(false);
     setBoard(shuffleBoard());
   }
 
@@ -53,8 +70,15 @@ export function Game2() {
     setBoard(next);
 
     if (next.every((v, i) => v === i)) {
-      setFinished(true);
-      launchCelebrationConfetti();
+        setFinished(true);
+
+        setTimeout(() => {
+            launchCelebrationConfetti();
+        }, 500);
+
+        setTimeout(() => {
+            setShowEnvelope(true);
+        }, 1100);
     }
   }
 
@@ -89,22 +113,26 @@ export function Game2() {
 
   return (
     <Card>
-      <div className="w-full max-w-sm">
-
+      <div
+        className={`w-full max-w-sm transition-all duration-700 ${
+          finished
+            ? "scale-110 shadow-2xl"
+            : ""
+        }`}
+      >
         <div className="mb-4 flex justify-end">
-
           <button
             onClick={reset}
             className="rounded-full p-2 hover:bg-sky-100"
           >
             <RotateCcw size={18} />
           </button>
-
         </div>
 
         <PuzzleGrid
           board={board}
           move={move}
+          finished={finished}
         />
 
         <p className="mt-6 text-xs uppercase tracking-widest text-muted-foreground">
@@ -114,27 +142,49 @@ export function Game2() {
         <img
           src={IMAGE}
           alt=""
-          className="mx-auto mt-2 h-36 rounded-xl border object-cover opacity-80"
+          className="mx-auto mt-2 h-36 border object-cover opacity-80"
         />
 
-        {finished && (
-          <div className="mt-8 animate-soft-in rounded-2xl border bg-white p-6">
-
-            <div className="text-5xl">
-              💌
-            </div>
-
-            <p className="mt-3 text-sm uppercase tracking-widest text-sky-700">
-              Clue
-            </p>
-
-            <h2 className="mt-2 text-2xl font-bold">
-              Painting of Fruits
-            </h2>
-
+        {showEnvelope && (
+          <div
+            className={`mt-8 flex justify-center transition-all duration-500 ${
+              finished
+                ? "opacity-100 scale-100 delay-500"
+                : "opacity-0 scale-50"
+            }`}
+          >
+            <button
+              onClick={() => setOpenedEnvelope(!openedEnvelope)}
+              className={`text-6xl transition-all duration-500 hover:scale-110 active:scale-95 ${
+                openedEnvelope ? "rotate-12 scale-95" : ""
+              }`}
+            >
+              <span
+                className={`text-6xl transition-all duration-500 ${
+                  openedEnvelope ? "rotate-12 scale-95" : ""
+                }`}
+              >
+                {openedEnvelope ? "📨" : "💌"}
+              </span>
+            </button>
           </div>
         )}
 
+        {finished && openedEnvelope && (
+          <div className="animate-soft-in mt-6 rounded-3xl border border-sky-200 bg-white/90 p-6 shadow-xl backdrop-blur">
+            <p className="uppercase tracking-widest text-xs text-sky-700">
+              Clue
+            </p>
+
+            <h2 className="mt-3 text-3xl font-display text-sky-800">
+              Painting of Fruits
+            </h2>
+
+            <p className="mt-4 text-muted-foreground">
+              ❤️ Go see what's waiting for you.
+            </p>
+          </div>
+        )}
       </div>
     </Card>
   );
@@ -143,45 +193,52 @@ export function Game2() {
 function PuzzleGrid({
   board,
   move,
+  finished,
 }: {
   board: number[];
   move: (i: number) => void;
+  finished: boolean;
 }) {
   return (
     <div
-      className="grid gap-1 rounded-2xl border bg-sky-50 p-1"
+      className="grid overflow-hidden rounded-2xl border"
       style={{
         gridTemplateColumns: "repeat(3,1fr)",
       }}
     >
       {board.map((tile, index) => {
+        const isEmpty = tile === 8;
+        const x = (tile % 3) * 50;
+        const y = Math.floor(tile / 3) * 50;
 
-        if (tile === 8)
+        if (isEmpty && !finished) {
           return (
             <div
               key={index}
-              className="aspect-square rounded-lg bg-sky-100"
+              className="aspect-square bg-sky-100"
             />
           );
-
-        const x = (tile % 3) * 50;
-        const y = Math.floor(tile / 3) * 50;
+        }
 
         return (
           <button
             key={index}
-            onClick={() => move(index)}
-            className="aspect-square overflow-hidden rounded-lg"
-          >
-            <div
-              className="h-full w-full"
-              style={{
-                backgroundImage: `url(${IMAGE})`,
-                backgroundSize: "300% 300%",
-                backgroundPosition: `${x}% ${y}%`,
-              }}
-            />
-          </button>
+            type="button"
+            onClick={() => {
+            if (!finished) move(index);
+            }}
+            disabled={finished}
+            className={`aspect-square ${isEmpty ? "bg-sky-100" : ""}`}
+            style={
+              !isEmpty || finished
+                ? {
+                    backgroundImage: `url(${IMAGE})`,
+                    backgroundSize: "300% 300%",
+                    backgroundPosition: `${x}% ${y}%`,
+                  }
+                : undefined
+            }
+          />
         );
       })}
     </div>
@@ -191,7 +248,7 @@ function PuzzleGrid({
 function Card({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <section
@@ -210,7 +267,7 @@ function PrimaryButton({
   children,
   onClick,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   onClick: () => void;
 }) {
   return (
