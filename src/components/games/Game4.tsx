@@ -314,11 +314,12 @@ export function Game4() {
       )}
 
       {phase === "jumpscare" && (
-        <div className="g4-shake fixed inset-0 z-[100] bg-black">
+        <div className="g4-shake fixed inset-0 z-[100] flex items-center justify-center bg-black">
           <img
-            src="/images/puzzle/game4.png"
+            src="/images/puzzle/game4.webp"
             alt=""
-            className="size-full object-cover"
+            decoding="async"
+            className="max-h-full max-w-full object-contain"
           />
         </div>
       )}
