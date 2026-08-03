@@ -123,7 +123,7 @@ export function Game2() {
         <div className="mb-4 flex justify-end">
           <button
             onClick={reset}
-            className="rounded-full p-2 hover:bg-sky-100"
+            className="rounded-full p-2 hover:bg-[#EEE7FA]"
           >
             <RotateCcw size={18} />
           </button>
@@ -171,12 +171,12 @@ export function Game2() {
         )}
 
         {finished && openedEnvelope && (
-          <div className="animate-soft-in mt-6 rounded-3xl border border-sky-200 bg-white/90 p-6 shadow-xl backdrop-blur">
-            <p className="uppercase tracking-widest text-xs text-sky-700">
+          <div className="animate-soft-in mt-6 rounded-3xl border border-[#DCD2F0] bg-white/90 p-6 shadow-xl backdrop-blur">
+            <p className="uppercase tracking-widest text-xs text-violet-700">
               Clue
             </p>
 
-            <h2 className="mt-3 text-3xl font-display text-sky-800">
+            <h2 className="mt-3 text-3xl font-display text-violet-800">
               Painting of Fruits
             </h2>
 
@@ -201,7 +201,7 @@ function PuzzleGrid({
 }) {
   return (
     <div
-      className="grid overflow-hidden rounded-2xl border"
+      className="grid overflow-hidden rounded-2xl border border-[#DCD2F0]"
       style={{
         gridTemplateColumns: "repeat(3,1fr)",
       }}
@@ -215,7 +215,7 @@ function PuzzleGrid({
           return (
             <div
               key={index}
-              className="aspect-square bg-sky-100"
+              className="aspect-square bg-[#EEE7FA]"
             />
           );
         }
@@ -228,7 +228,7 @@ function PuzzleGrid({
             if (!finished) move(index);
             }}
             disabled={finished}
-            className={`aspect-square ${isEmpty ? "bg-sky-100" : ""}`}
+            className={`aspect-square ${isEmpty ? "bg-violet-100" : ""}`}
             style={
               !isEmpty || finished
                 ? {
@@ -254,8 +254,8 @@ function Card({
     <section
       className="surface animate-soft-in mt-8 flex flex-1 flex-col items-center justify-center gap-6 rounded-3xl border p-8 text-center sm:p-10"
       style={{
-        borderColor: "#C8E1F2",
-        background: "#eef8fd",
+        borderColor: "#DCD2F0",
+        background: "#F7F4FC",
       }}
     >
       {children}
@@ -273,7 +273,7 @@ function PrimaryButton({
   return (
     <button
       onClick={onClick}
-      className="rounded-full bg-sky-200 px-8 py-3 font-medium transition hover:scale-105"
+      className="rounded-full bg-[#DCD2F0] px-8 py-3 font-medium transition hover:scale-105 hover:bg-[#d3c5ec]"
     >
       {children}
     </button>
