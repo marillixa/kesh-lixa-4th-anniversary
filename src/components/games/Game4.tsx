@@ -169,7 +169,7 @@ function PrimaryButton({
       onClick={onClick}
       className="rounded-full px-8 py-3 font-medium transition hover:scale-105"
       style={{
-        background: "#F9DFC0",
+        background: "#ffe6c8",
       }}
     >
       {children}
