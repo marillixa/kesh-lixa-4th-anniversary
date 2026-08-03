@@ -78,6 +78,23 @@ export function Game4() {
   const oopsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  useEffect(() => {
+  const audio = new Audio("/music/puzzle/jumpscare.mp3");
+  audio.preload = "auto";
+  audio.load();
+
+  audioRef.current = audio;
+
+  return () => {
+    audio.pause();
+  };
+}, []);
+
+useEffect(() => {
+  const img = new Image();
+  img.src = "/images/puzzle/game4.webp";
+}, []);
+
   /* responsive scaling */
   useLayoutEffect(() => {
     const el = wrapRef.current;
@@ -117,20 +134,23 @@ export function Game4() {
   }, [resetPlayer]);
 
   const startJumpscare = useCallback(() => {
-    setDragging(false);
-    setPhase("jumpscare");
-    const audio = new Audio("/music/puzzle/jumpscare.mp3");
-    audioRef.current = audio;
-    audio.volume = 1;
-    void audio.play().catch(() => {
-      /* autoplay blocked — visual only */
-    });
-    window.setTimeout(() => {
-      audio.pause();
-      setPhase("ending");
-      launchCelebrationConfetti();
-    }, 10000);
-  }, []);
+  setDragging(false);
+
+  // Show image immediately
+  setPhase("jumpscare");
+
+  // Play already-loaded audio immediately
+  if (audioRef.current) {
+    audioRef.current.currentTime = 0;
+    void audioRef.current.play().catch(() => {});
+  }
+
+  window.setTimeout(() => {
+    audioRef.current?.pause();
+    setPhase("ending");
+    launchCelebrationConfetti();
+  }, 4000);
+}, []);
 
   function handleMove(clientX: number, clientY: number) {
     if (!dragging || phase !== "playing") return;
@@ -314,13 +334,21 @@ export function Game4() {
       )}
 
       {phase === "jumpscare" && (
-        <div className="g4-shake fixed inset-0 z-[100] flex items-center justify-center bg-black">
+        <div
+  className="g4-shake fixed inset-0 z-[100] flex items-center justify-center"
+  style={{
+    backgroundImage: "url('/images/puzzle/game4.webp')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  }}
+>
           <img
-            src="/images/puzzle/game4.webp"
-            alt=""
-            decoding="async"
-            className="max-h-full max-w-full object-contain"
-          />
+  src="/images/puzzle/game4.webp"
+  alt=""
+  decoding="async"
+  className="max-h-full max-w-full object-contain"
+/>
         </div>
       )}
 
