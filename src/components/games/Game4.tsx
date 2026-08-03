@@ -93,6 +93,8 @@ export function Game4() {
 useEffect(() => {
   const img = new Image();
   img.src = "/images/puzzle/game4.webp";
+
+  img.decode?.().catch(() => {});
 }, []);
 
   /* responsive scaling */
@@ -139,11 +141,12 @@ useEffect(() => {
   // Show image immediately
   setPhase("jumpscare");
 
-  // Play already-loaded audio immediately
+requestAnimationFrame(() => {
   if (audioRef.current) {
     audioRef.current.currentTime = 0;
     void audioRef.current.play().catch(() => {});
   }
+});
 
   window.setTimeout(() => {
     audioRef.current?.pause();
@@ -334,23 +337,16 @@ useEffect(() => {
       )}
 
       {phase === "jumpscare" && (
-        <div
-  className="g4-shake fixed inset-0 z-[100] flex items-center justify-center"
-  style={{
-    backgroundImage: "url('/images/puzzle/game4.webp')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-  }}
->
-          <img
-  src="/images/puzzle/game4.webp"
-  alt=""
-  decoding="async"
-  className="max-h-full max-w-full object-contain"
-/>
-        </div>
-      )}
+  <div
+    className="g4-shake fixed inset-0 z-[100]"
+    style={{
+      backgroundImage: "url('/images/puzzle/game4.webp')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    }}
+  />
+)}
 
       {phase === "ending" && (
         <Card>
