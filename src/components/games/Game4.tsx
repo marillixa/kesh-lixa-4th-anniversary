@@ -4,6 +4,17 @@ type Step = 1 | 2 | 3 | 4;
 
 export function Game4() {
   const [step, setStep] = useState<Step>(1);
+  const [player, setPlayer] = useState({ x: 30, y: 30 });
+  const [dragging, setDragging] = useState(false);
+  const MAZE_WIDTH = 320;
+  const MAZE_HEIGHT = 500;
+
+  const FINISH = {
+    x: 250,
+    y: 20,
+    width: 50,
+    height: 40,
+};
 
   return (
     <div className="flex flex-1 flex-col">
@@ -48,7 +59,82 @@ export function Game4() {
             Level 1
           </h2>
 
-          <MazePlaceholder />
+          <div
+            className="relative bg-black"
+            style={{
+              width: MAZE_WIDTH,
+              height: MAZE_HEIGHT,
+            }}
+            onMouseMove={(e: React.MouseEvent<HTMLDivElement>) => {
+              if (!dragging) return;
+
+              const rect = e.currentTarget.getBoundingClientRect();
+
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+
+              if (hitWall(x, y)) {
+                alert("Oops! Try again ❤️");
+                setPlayer({
+                  x: 30,
+                  y: 30,
+                });
+                return;
+              }
+
+              if (
+                x > FINISH.x &&
+                x < FINISH.x + FINISH.width &&
+                y > FINISH.y &&
+                y < FINISH.y + FINISH.height
+              ) {
+                alert("Level Complete!");
+              }
+
+              setPlayer({
+                x,
+                y,
+              });
+            }}
+            onMouseUp={() => setDragging(false)}
+            onMouseLeave={() => setDragging(false)}
+          >
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: 40,
+                height: MAZE_HEIGHT,
+                background: "#F9DFC0",
+              }}
+            />
+
+            <div
+              style={{
+                position: "absolute",
+                left: FINISH.x,
+                top: FINISH.y,
+                width: FINISH.width,
+                height: FINISH.height,
+                background: "#ff8b5e",
+              }}
+            />
+
+            <div
+              onMouseDown={() => setDragging(true)}
+              style={{
+                position: "absolute",
+                left: player.x,
+                top: player.y,
+                cursor: "grab",
+                fontSize: 20,
+                userSelect: "none",
+              }}
+            >
+              ♥
+            </div>
+          </div>
 
         </Card>
 
@@ -154,6 +240,25 @@ function Card({
     >
       {children}
     </section>
+  );
+}
+
+function hitWall(x: number, y: number) {
+  const walls = [
+    {
+      x: 40,
+      y: 0,
+      width: 220,
+      height: 460,
+    },
+  ];
+
+  return walls.some(
+    (wall) =>
+      x > wall.x &&
+      x < wall.x + wall.width &&
+      y > wall.y &&
+      y < wall.y + wall.height
   );
 }
 
