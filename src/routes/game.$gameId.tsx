@@ -8,6 +8,7 @@ import { CelebrationModal } from "@/components/keepsakes/CelebrationModal";
 import { KeepsakeModal } from "@/components/keepsakes/KeepsakeModal";
 import { Game3 } from "@/components/games/Game3";
 import { Game6 } from "@/components/games/Game6";
+import { Game2 } from "@/components/games/Game2";
 
 export const Route = createFileRoute("/game/$gameId")({
   head: () => ({
@@ -97,6 +98,33 @@ function GamePage() {
       </main>
     );
   }
+
+  if (game.id === 2) {
+  return (
+    <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8">
+      <BackLink />
+
+      <Game2 />
+
+      <button
+        type="button"
+        onClick={handleToggle}
+        className="press mt-6 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs text-muted-foreground active:scale-95 sm:hover:text-foreground"
+      >
+        {completed && (
+          <Check
+            className="size-3.5 text-primary"
+            strokeWidth={2.5}
+          />
+        )}
+
+        {completed ? "Mark as Incomplete" : "Mark as Complete"}
+      </button>
+
+      {overlays}
+    </main>
+  );
+}
 
   if (game.id === 6) {
   return (
