@@ -129,7 +129,7 @@ export function Game4() {
       audio.pause();
       setPhase("ending");
       launchCelebrationConfetti();
-    }, 4000);
+    }, 10000);
   }, []);
 
   function handleMove(clientX: number, clientY: number) {
