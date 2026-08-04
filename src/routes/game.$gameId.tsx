@@ -13,6 +13,8 @@ import { Game4 } from "@/components/games/Game4";
 import { Game7 } from "@/components/games/Game7";
 import { Game5 } from "@/components/games/Game5";
 import { Game9 } from "@/components/games/Game9";
+import { Game8 } from "@/components/games/Game8";
+
 
 export const Route = createFileRoute("/game/$gameId")({
   head: () => ({
@@ -119,6 +121,35 @@ function GamePage() {
           <Check className="size-3.5 text-primary" strokeWidth={2.5} />
         )}
         {completed ? "Mark as Incomplete" : "Mark as Complete"}
+      </button>
+
+      {overlays}
+    </main>
+  );
+}
+
+if (game.id === 8) {
+  return (
+    <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8">
+      <BackLink />
+
+      <Game8 />
+
+      <button
+        type="button"
+        onClick={handleToggle}
+        className="press mt-6 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs text-muted-foreground active:scale-95 sm:hover:text-foreground"
+      >
+        {completed && (
+          <Check
+            className="size-3.5 text-primary"
+            strokeWidth={2.5}
+          />
+        )}
+
+        {completed
+          ? "Mark as Incomplete"
+          : "Mark as Complete"}
       </button>
 
       {overlays}
