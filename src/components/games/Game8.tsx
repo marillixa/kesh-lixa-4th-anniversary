@@ -416,7 +416,7 @@ Your next clue
 </p>
 
 <p className="mt-5 text-2xl">
-🪞
+✨
 </p>
 
 <p className="mt-5 leading-relaxed">
