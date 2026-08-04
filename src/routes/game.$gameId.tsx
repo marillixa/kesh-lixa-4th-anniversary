@@ -14,6 +14,7 @@ import { Game7 } from "@/components/games/Game7";
 import { Game5 } from "@/components/games/Game5";
 import { Game9 } from "@/components/games/Game9";
 import { Game8 } from "@/components/games/Game8";
+import { Game1 } from "@/components/games/Game1";
 
 
 export const Route = createFileRoute("/game/$gameId")({
