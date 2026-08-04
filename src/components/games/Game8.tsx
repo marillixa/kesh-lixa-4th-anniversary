@@ -321,6 +321,7 @@ style={{
   setFinished(false);
 
   setOpenEnvelope(false);
+  setShowEnvelope(false);
 
   setTimeLeft(120);
 
@@ -449,19 +450,23 @@ function CardTile({
     <button
       onClick={onClick}
       style={{
-        perspective: "700px",
-        display: card.matched ? "none" : "block",
-      }}
+  perspective: "700px",
+  opacity: card.matched ? 0 : 1,
+  pointerEvents: card.matched ? "none" : "auto",
+}}
     >
       <div
-        className="relative h-12 w-12 transition-transform duration-500"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: card.flipped
-            ? "rotateY(180deg)"
-            : "rotateY(0deg)",
-        }}
-      >
+  className="relative h-12 w-12 transition-all duration-500"
+  style={{
+    transformStyle: "preserve-3d",
+    transform: card.flipped
+      ? "rotateY(180deg)"
+      : "rotateY(0deg)",
+    opacity: card.matched ? 0 : 1,
+    transformOrigin: "center",
+    scale: card.matched ? "0.7" : "1",
+  }}
+>
         {/* FRONT */}
 
         <div
