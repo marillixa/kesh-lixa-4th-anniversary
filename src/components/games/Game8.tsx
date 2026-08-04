@@ -140,7 +140,7 @@ function MemoryGame() {
 
   return (
     <section
-      className="surface mt-8 flex flex-col items-center rounded-3xl p-6"
+      className="surface mt-8 mx-auto w-full max-w-md flex flex-col items-center rounded-3xl p-5"
       style={{
         background: "#FFF7FB",
         border: "1px solid #F6D0E4",
@@ -156,11 +156,11 @@ function MemoryGame() {
 
       {preview && (
         <p className="mt-2 text-sm text-pink-500 font-medium animate-pulse">
-          Memorize them...
+          Take a good look... ❤️
         </p>
       )}
 
-      <div className="mt-8 grid grid-cols-6 gap-3">
+      <div className="mt-7 grid grid-cols-6 gap-2">
         {cards.map((card) => (
           <CardTile
             key={card.id}
@@ -180,20 +180,24 @@ function CardTile({
   return (
     <button
       className={`
-        flex h-14 w-14 items-center justify-center
-        rounded-xl
-        text-2xl
-        transition-all
-        duration-500
-        shadow-sm
-      `}
+  flex
+  h-12
+  w-12
+  items-center
+  justify-center
+  rounded-xl
+  text-xl
+  transition-all
+  duration-300
+  shadow-sm
+`}
       style={{
         background: card.flipped
           ? "#ffffff"
           : "#F6D0E4",
       }}
     >
-      {card.flipped ? card.emoji : "♡"}
+      {card.flipped ? card.emoji : "♥"}
     </button>
   );
 }
