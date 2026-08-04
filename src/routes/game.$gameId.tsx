@@ -88,7 +88,29 @@ function GamePage() {
     </>
   );
 
+  if (game.id === 1) {
+    return (
+      <main
+        className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8"
+        style={{ background: "#FBEFC2" }}
+      >
+        <BackLink />
+        <Game1 />
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="press mt-6 inline-flex items-center gap-2 self-start rounded-full px-3 py-2 text-xs text-muted-foreground active:scale-95 sm:hover:text-foreground"
+        >
+          {completed && <Check className="size-3.5 text-primary" strokeWidth={2.5} />}
+          {completed ? "Mark as Incomplete" : "Mark as Complete"}
+        </button>
+        {overlays}
+      </main>
+    );
+  }
+
   if (game.id === 3) {
+
     return (
       <main className="animate-soft-in mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pb-8 pt-8 sm:px-8">
         <BackLink />
