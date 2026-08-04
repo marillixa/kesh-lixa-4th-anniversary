@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { GAMES } from "@/lib/games";
 import { GameTile } from "./GameTile";
 import { KEEPSAKES, TOTAL_KEEPSAKES, isKeepsakeUnlocked } from "@/lib/keepsakes";
+import { ProgressTracker } from "./ProgressTracker";
 
 
 
