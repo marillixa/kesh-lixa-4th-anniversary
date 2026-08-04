@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { launchCelebrationConfetti } from "@/lib/confetti";
 
 type Step = 1 | 2;
@@ -115,6 +115,22 @@ function MemoryGame() {
 
   // Show all cards for the first 2 seconds
   const [preview, setPreview] = useState(true);
+  const [firstCard, setFirstCard] = useState<number | null>(null);
+
+const [secondCard, setSecondCard] = useState<number | null>(null);
+
+const [movesLocked, setMovesLocked] = useState(false);
+
+const [started, setStarted] = useState(false);
+
+const [timeLeft, setTimeLeft] = useState(120);
+
+const [finished, setFinished] = useState(false);
+
+const [openEnvelope, setOpenEnvelope] = useState(false);
+const [showEnvelope, setShowEnvelope] = useState(false);
+const [gameOver, setGameOver] = useState(false);
+  
 
   useEffect(() => {
     setCards((prev) =>
@@ -138,6 +154,101 @@ function MemoryGame() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+  if (!started) return;
+
+  if (finished) return;
+
+  if (timeLeft <= 0) return;
+
+  const timer = setInterval(() => {
+    setTimeLeft((t) => t - 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [started, finished, timeLeft]);
+
+useEffect(() => {
+  if (timeLeft > 0) return;
+
+  setStarted(false);
+  setGameOver(true);
+}, [timeLeft]);
+
+function flipCard(index: number) {
+  if (preview) return;
+
+  if (movesLocked) return;
+
+  if (cards[index].matched) return;
+
+  if (cards[index].flipped) return;
+
+  if (!started) setStarted(true);
+
+  const updated = [...cards];
+
+  updated[index].flipped = true;
+
+  setCards(updated);
+
+  if (firstCard === null) {
+    setFirstCard(index);
+    return;
+  }
+
+  setSecondCard(index);
+}
+
+useEffect(() => {
+  if (firstCard === null || secondCard === null) return;
+
+  setMovesLocked(true);
+
+  const first = cards[firstCard];
+  const second = cards[secondCard];
+
+  if (first.emoji === second.emoji) {
+    setTimeout(() => {
+      const updated = [...cards];
+
+      updated[firstCard].matched = true;
+      updated[secondCard].matched = true;
+
+      setCards(updated);
+
+      setFirstCard(null);
+      setSecondCard(null);
+
+      setMovesLocked(false);
+
+      if (updated.filter(c => c.matched).length === updated.length) {
+        setFinished(true);
+
+launchCelebrationConfetti();
+
+setTimeout(() => {
+  setShowEnvelope(true);
+}, 1000);
+      }
+    }, 500);
+  } else {
+    setTimeout(() => {
+      const updated = [...cards];
+
+      updated[firstCard].flipped = false;
+      updated[secondCard].flipped = false;
+
+      setCards(updated);
+
+      setFirstCard(null);
+      setSecondCard(null);
+
+      setMovesLocked(false);
+    }, 800);
+  }
+}, [secondCard, firstCard, cards]);
+
   return (
     <section
       className="surface mt-8 mx-auto w-full max-w-md flex flex-col items-center rounded-3xl p-5"
@@ -160,44 +271,221 @@ function MemoryGame() {
         </p>
       )}
 
-      <div className="mt-7 grid grid-cols-6 gap-2">
-        {cards.map((card) => (
-          <CardTile
-            key={card.id}
-            card={card}
-          />
-        ))}
-      </div>
+<p
+className="mt-5 text-lg font-semibold transition-colors"
+style={{
+  color: timeLeft <= 20 ? "#ef4444" : "#222",
+  animation:
+    timeLeft <= 20
+      ? "pulse 1s infinite"
+      : undefined,
+}}
+>
+  ⏰ {Math.floor(timeLeft / 60)}:
+  {(timeLeft % 60).toString().padStart(2, "0")}
+</p>
+
+      {gameOver ? (
+
+  <div className="mt-10 flex flex-col items-center gap-5">
+
+    <div className="text-6xl">
+      ⏰
+    </div>
+
+    <h3 className="text-2xl font-semibold">
+      Time's Up!
+    </h3>
+
+    <p className="text-center text-muted-foreground max-w-xs">
+      Don't worry...
+      every memory deserves another try.
+    </p>
+
+    <button
+      onClick={() => {
+
+  const shuffled = shuffleCards();
+
+  setCards(
+    shuffled.map(card => ({
+      ...card,
+      flipped: true,
+    }))
+  );
+
+  setPreview(true);
+
+  setStarted(false);
+
+  setFinished(false);
+
+  setOpenEnvelope(false);
+
+  setTimeLeft(120);
+
+  setFirstCard(null);
+
+  setSecondCard(null);
+
+  setMovesLocked(false);
+
+  setGameOver(false);
+
+  setTimeout(() => {
+
+    setPreview(false);
+
+    setCards(prev =>
+      prev.map(card => ({
+        ...card,
+        flipped:false,
+      }))
+    );
+
+  },2000);
+
+}}
+      className="rounded-full px-8 py-3 font-medium"
+      style={{
+        background:"#F6D0E4",
+      }}
+    >
+      Try Again ❤️
+    </button>
+
+  </div>
+
+) : (
+
+<div className="mt-7 grid grid-cols-6 gap-2">
+
+{cards.map((card,index)=>(
+
+<CardTile
+key={card.id}
+card={card}
+onClick={()=>flipCard(index)}
+/>
+
+))}
+
+</div>
+
+)}
+
+{finished && showEnvelope && (
+
+<>
+
+<div className="mt-6 text-center animate-soft-in">
+  <p className="text-2xl font-semibold">
+    You did it! ❤️
+  </p>
+
+  <p className="text-muted-foreground">
+    Every little memory led you here.
+  </p>
+</div>
+
+{!openEnvelope ? (
+
+<button
+onClick={() => setOpenEnvelope(true)}
+className="
+mt-8
+text-7xl
+animate-bounce
+transition
+hover:scale-110
+"
+>
+✉️
+</button>
+
+) : (
+
+<button
+onClick={() => setOpenEnvelope(false)}
+className="surface mt-6 max-w-sm rounded-3xl p-6 text-center"
+>
+
+<p className="uppercase text-xs tracking-[0.3em] text-muted-foreground">
+Your next clue
+</p>
+
+<p className="mt-5 text-2xl">
+🪞
+</p>
+
+<p className="mt-5 leading-relaxed">
+Go where your beautiful smile
+looks back at you.
+</p>
+
+<p className="mt-6 text-xs text-muted-foreground">
+Tap to close
+</p>
+
+</button>
+
+)}
+</>
+
+)}
+
     </section>
   );
 }
 
 function CardTile({
   card,
+  onClick,
 }: {
   card: CardType;
+  onClick: () => void;
 }) {
   return (
     <button
-      className={`
-  flex
-  h-12
-  w-12
-  items-center
-  justify-center
-  rounded-xl
-  text-xl
-  transition-all
-  duration-300
-  shadow-sm
-`}
+      onClick={onClick}
       style={{
-        background: card.flipped
-          ? "#ffffff"
-          : "#F6D0E4",
+        perspective: "700px",
+        display: card.matched ? "none" : "block",
       }}
     >
-      {card.flipped ? card.emoji : "♥"}
+      <div
+        className="relative h-12 w-12 transition-transform duration-500"
+        style={{
+          transformStyle: "preserve-3d",
+          transform: card.flipped
+            ? "rotateY(180deg)"
+            : "rotateY(0deg)",
+        }}
+      >
+        {/* FRONT */}
+
+        <div
+          className="absolute inset-0 flex items-center justify-center rounded-xl text-xl shadow-sm"
+          style={{
+            backfaceVisibility: "hidden",
+            background: "#F6D0E4",
+          }}
+        >
+          ♥
+        </div>
+
+        {/* BACK */}
+
+        <div
+          className="absolute inset-0 flex items-center justify-center rounded-xl bg-white text-xl shadow-sm"
+          style={{
+            transform: "rotateY(180deg)",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          {card.emoji}
+        </div>
+      </div>
     </button>
   );
 }
