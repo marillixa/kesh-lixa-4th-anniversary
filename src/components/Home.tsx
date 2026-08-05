@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { GAMES } from "@/lib/games";
 import { GameTile } from "./GameTile";
 import { KEEPSAKES, TOTAL_KEEPSAKES, isKeepsakeUnlocked } from "@/lib/keepsakes";
+import { ProgressTracker } from "./ProgressTracker";
 
 
 
@@ -22,10 +23,13 @@ export function Home({ completedGames }: { completedGames: number[] }) {
         </p>
       </header>
 
-      <div className="animate-fade-up mx-auto mt-8 flex items-center gap-3 rounded-full border border-border/70 px-4 py-2 text-xs text-muted-foreground [animation-delay:120ms]">
+      <ProgressTracker completed={done} />
+
+      <div className="animate-fade-up mx-auto mt-3 flex items-center gap-3 rounded-full border border-border/70 px-4 py-2 text-xs text-muted-foreground [animation-delay:120ms]">
         <span className="size-1.5 rounded-full bg-primary" />
         {done} of {GAMES.length} discovered
       </div>
+
 
       <section className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5">
         {GAMES.map((game, i) => (
