@@ -51,27 +51,20 @@ export function KeepsakeModal({
           {keepsake.title}
         </h2>
 
-        <div
-          className="mt-5 flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl"
-          style={{ backgroundColor: keepsake.tint }}
-        >
-          {keepsake.image ? (
-            <img
-              src={keepsake.image}
-              alt={keepsake.title}
-              loading="lazy"
-              className="size-full object-cover"
-            />
-          ) : (
-            <ImageIcon
-              className="size-7"
-              style={{ color: keepsake.tintFg }}
-              strokeWidth={1.25}
-            />
-          )}
-        </div>
+        <PhotoCarousel
+          images={keepsake.images ?? []}
+          alt={keepsake.title}
+          tint={keepsake.tint}
+          tintFg={keepsake.tintFg}
+          index={photo}
+          onIndexChange={setPhoto}
+        />
 
-        <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
+        <p className="mt-5 text-sm italic leading-relaxed text-foreground/70">
+          {keepsake.shortDescription}
+        </p>
+
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {keepsake.fullMessage}
         </p>
 
