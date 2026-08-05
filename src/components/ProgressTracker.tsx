@@ -28,42 +28,50 @@ export function ProgressTracker({ completed }: { completed: number }) {
   }, [finished]);
 
   // 0 → 0% travel, 8 → ~40% travel, final step closes the gap
-  const step = finished && !together ? TOTAL - 1 : done;
-  const travel = together ? 46 : (step / (TOTAL - 1)) * 40;
+  // Gap shrinks every completed game.
+// Starts around 180px apart and gradually closes.
 
-  const style = (dir: 1 | -1) => ({
-    transform: `translateX(${dir * travel}%)`,
-    transition: "transform 500ms ease-in-out",
-  });
+const gap = together
+  ? 4
+  : Math.max(20, 180 - done * 20);
 
   return (
-    <div className="animate-fade-up mx-auto mt-6 flex w-full max-w-xs items-center justify-between [animation-delay:80ms]">
+    <div className="animate-fade-up mx-auto mt-6 flex items-center justify-center">
       <img
-        src={lixabella.url}
-        alt="Lixa and Bella"
-        className="h-10 w-auto select-none"
-        style={style(1)}
-        draggable={false}
-      />
-      <span
-        aria-hidden
-        className="text-sm"
-        style={{
-          color: "oklch(0.72 0.12 0)",
-          opacity: together ? 0 : 1,
-          transform: popped && !together ? "scale(1.25)" : "scale(1)",
-          transition: "transform 300ms ease-in-out, opacity 300ms ease-in-out",
-        }}
-      >
-        ❤︎
-      </span>
-      <img
-        src={keshyosef.url}
-        alt="Kesh and Yosef"
-        className="h-10 w-auto select-none"
-        style={style(-1)}
-        draggable={false}
-      />
+  src={lixabella.url}
+  alt="Lixa and Bella"
+  className="h-10 w-auto select-none transition-all duration-500 ease-in-out"
+  draggable={false}
+/>
+
+<div
+  className="flex items-center justify-center transition-all duration-500 ease-in-out"
+  style={{
+    width: together ? 0 : gap,
+  }}
+>
+  <span
+    className="text-sm"
+    style={{
+      opacity: together ? 0 : 1,
+      transform:
+        popped && !together
+          ? "scale(1.3)"
+          : "scale(1)",
+      transition:
+        "transform 300ms ease, opacity 300ms ease",
+    }}
+  >
+    ❤️
+  </span>
+</div>
+
+<img
+  src={keshyosef.url}
+  alt="Kesh and Yosef"
+  className="h-10 w-auto select-none transition-all duration-500 ease-in-out"
+  draggable={false}
+/>
     </div>
   );
 }

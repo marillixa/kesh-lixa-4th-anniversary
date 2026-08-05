@@ -7,7 +7,7 @@ import { ProgressTracker } from "./ProgressTracker";
 
 
 export function Home({ completedGames }: { completedGames: number[] }) {
-  const done = completedGames.length;
+  const done = new Set(completedGames).size;
   const collected = KEEPSAKES.filter((k) => isKeepsakeUnlocked(k, completedGames)).length;
 
 
