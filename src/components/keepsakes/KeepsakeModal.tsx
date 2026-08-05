@@ -10,6 +10,12 @@ export function KeepsakeModal({
   keepsake: Keepsake | null;
   onClose: () => void;
 }) {
+  const [photo, setPhoto] = useState(0);
+
+  useEffect(() => {
+    setPhoto(0);
+  }, [keepsake?.id]);
+
   useEffect(() => {
     if (!keepsake) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
