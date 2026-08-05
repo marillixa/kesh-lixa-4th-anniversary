@@ -1,6 +1,7 @@
-import { useEffect } from "react";
-import { X, Heart, ImageIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { X, Heart } from "lucide-react";
 import type { Keepsake } from "@/lib/keepsakes";
+import { PhotoCarousel } from "./PhotoCarousel";
 
 export function KeepsakeModal({
   keepsake,
