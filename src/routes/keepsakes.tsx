@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { KeepsakesSection } from "@/components/keepsakes/KeepsakesSection";
 import { useProgress } from "@/lib/progress";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 
 export const Route = createFileRoute("/keepsakes")({
   head: () => ({
