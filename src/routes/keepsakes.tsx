@@ -25,6 +25,8 @@ export const Route = createFileRoute("/keepsakes")({
 
 function KeepsakesPage() {
   const { progress, loaded } = useProgress();
+  useBackgroundMusic("/music/keepsake/keepsakemusic.mp3");
+
 
   if (!loaded) return <div className="min-h-dvh" />;
 
