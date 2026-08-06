@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { KeepsakesSection } from "@/components/keepsakes/KeepsakesSection";
 import { useProgress } from "@/lib/progress";
+import { useBackgroundMusic } from "@/hooks/useBackgroundMusic";
 
 export const Route = createFileRoute("/keepsakes")({
   head: () => ({
@@ -24,6 +25,8 @@ export const Route = createFileRoute("/keepsakes")({
 
 function KeepsakesPage() {
   const { progress, loaded } = useProgress();
+  useBackgroundMusic("/music/keepsake/keepsakemusic.mp3");
+
 
   if (!loaded) return <div className="min-h-dvh" />;
 
