@@ -1,7 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Home } from "@/components/Home";
 import { LockScreen } from "@/components/LockScreen";
+import { IntroModal } from "@/components/IntroModal";
 import { useProgress } from "@/lib/progress";
+
+const INTRO_KEY = "anniversary-intro-seen";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -24,9 +28,32 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { progress, loaded, unlock } = useProgress();
+  const [introSeen, setIntroSeen] = useState(true);
+
+  useEffect(() => {
+    try {
+      setIntroSeen(window.sessionStorage.getItem(INTRO_KEY) === "1");
+    } catch {
+      setIntroSeen(false);
+    }
+  }, []);
+
+  const closeIntro = () => {
+    try {
+      window.sessionStorage.setItem(INTRO_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setIntroSeen(true);
+  };
 
   if (!loaded) return <div className="min-h-dvh" />;
   if (!progress.unlocked) return <LockScreen onUnlocked={unlock} />;
 
-  return <Home completedGames={progress.completedGames} />;
+  return (
+    <>
+      <Home completedGames={progress.completedGames} />
+      {!introSeen && <IntroModal onClose={closeIntro} />}
+    </>
+  );
 }
