@@ -28,9 +28,32 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { progress, loaded, unlock } = useProgress();
+  const [introSeen, setIntroSeen] = useState(true);
+
+  useEffect(() => {
+    try {
+      setIntroSeen(window.sessionStorage.getItem(INTRO_KEY) === "1");
+    } catch {
+      setIntroSeen(false);
+    }
+  }, []);
+
+  const closeIntro = () => {
+    try {
+      window.sessionStorage.setItem(INTRO_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+    setIntroSeen(true);
+  };
 
   if (!loaded) return <div className="min-h-dvh" />;
   if (!progress.unlocked) return <LockScreen onUnlocked={unlock} />;
 
-  return <Home completedGames={progress.completedGames} />;
+  return (
+    <>
+      <Home completedGames={progress.completedGames} />
+      {!introSeen && <IntroModal onClose={closeIntro} />}
+    </>
+  );
 }
