@@ -1,7 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { Home } from "@/components/Home";
 import { LockScreen } from "@/components/LockScreen";
+import { IntroModal } from "@/components/IntroModal";
 import { useProgress } from "@/lib/progress";
+
+const INTRO_KEY = "anniversary-intro-seen";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
