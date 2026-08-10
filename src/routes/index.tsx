@@ -29,9 +29,27 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { progress, loaded, unlock } = useProgress();
+  const [showIntro, setShowIntro] = useState(false);
+
+  useEffect(() => {
+    if (!loaded || !progress.unlocked) return;
+    if (sessionStorage.getItem(INTRO_KEY)) return;
+    setShowIntro(true);
+  }, [loaded, progress.unlocked]);
+
+  const closeIntro = () => {
+    sessionStorage.setItem(INTRO_KEY, "1");
+    setShowIntro(false);
+  };
 
   if (!loaded) return <div className="min-h-dvh" />;
   if (!progress.unlocked) return <LockScreen onUnlocked={unlock} />;
 
-  return <Home completedGames={progress.completedGames} />;
+  return (
+    <>
+      <Home completedGames={progress.completedGames} />
+      {showIntro && <IntroModal onClose={closeIntro} />}
+    </>
+  );
+
 }
