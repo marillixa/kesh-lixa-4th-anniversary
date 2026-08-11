@@ -227,7 +227,7 @@ export function Game1() {
               </p>
               <p className="mt-4 text-2xl">📱</p>
               <p className="mt-3 text-base leading-relaxed text-foreground">
-                Look where I always end up when I'm watching TikTok. ❤️
+                Find a clue in the odd place where I like watching TikTok
               </p>
               <p className="mt-6 text-xs text-muted-foreground">Tap to close</p>
             </button>
